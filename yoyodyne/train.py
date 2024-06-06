@@ -342,6 +342,16 @@ def add_argparse_args(parser: argparse.ArgumentParser) -> None:
         action="store_false",
         dest="log_wandb",
     )
+    parser.add_argument(
+        "--entity",
+        required=True,
+        help="wandb entity. e.g. rime-labs",
+    )
+    parser.add_argument(
+        "--project",
+        required=True,
+        help="wandb project.e.g. yoyodyne-g2p",
+    )
     # Data arguments.
     data.add_argparse_args(parser)
     # Architecture arguments.
@@ -379,7 +389,10 @@ def main() -> None:
     args = parser.parse_args()
     util.log_arguments(args)
     if args.log_wandb:
-        wandb.init()
+        wandb.init(
+            entity=args.entity,
+            project=args.project,
+        )
     pl.seed_everything(args.seed)
     trainer = get_trainer_from_argparse_args(args)
     datamodule = get_datamodule_from_argparse_args(args)
